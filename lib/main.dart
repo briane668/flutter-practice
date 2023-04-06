@@ -13,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         'home': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
-        'detail': (context) => DetailPage(title: 'Flutter Demo Home Page'),
+        'detail': (context) =>
+            DetailPage(title: 'Flutter Demo Home Page', price: 200, photo: ""),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -263,22 +264,15 @@ class DetailPage extends StatefulWidget {
   final String photo;
 
   @override
-  State<DetailPage> createState() => DetailPagestate();
+  State<DetailPage> createState() => DetailPagestate(title, price, photo);
 }
 
 class DetailPagestate extends State<DetailPage> {
-  int _counter = 0;
+  DetailPagestate(this.title, this.price, this.photo);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  String title;
+  int price;
+  String photo;
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +290,7 @@ class DetailPagestate extends State<DetailPage> {
           children: [
             Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
               Image.asset(
-                'photo',
+                'assets/Image_Logo02.png',
                 width: 200,
                 height: 200,
               ),
@@ -314,7 +308,7 @@ class DetailPagestate extends State<DetailPage> {
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 10.0),
                         child: Image.asset(
-                          'assets/pngwing.png',
+                          photo,
                         ),
                       )),
                   Container(
