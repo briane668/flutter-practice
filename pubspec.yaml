@@ -23,3 +23,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/Image_Logo02.png
+    - assets/pngwingwomne.png
+    - assets/women.jpg
+    - assets/pngwing.png
