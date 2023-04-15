@@ -1,7 +1,91 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+
+class CounterBloc {
+  int _counter = 0;
+
+  final _counterSubject = BehaviorSubject<int>.seeded(0);
+
+  Stream<int> get counterStream => _counterSubject.stream;
+
+  void incrementCounter() {
+    _counter++;
+    _counterSubject.add(_counter);
+  }
+
+  void decrementCounter() {
+    _counter--;
+    _counterSubject.add(_counter);
+  }
+
+  void dispose() {
+    _counterSubject.close();
+  }
+}
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
+}
+
+class Cart with ChangeNotifier {
+  Map<String, int> _items = {};
+
+  Map<String, int> get items => {..._items};
+
+  int get itemCount => _items.length;
+
+  void addItem(String productId) {
+    if (_items.containsKey(productId)) {
+      _items.update(productId, (existingValue) => existingValue + 1);
+    } else {
+      _items.putIfAbsent(productId, () => 1);
+    }
+    notifyListeners();
+  }
+
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
+
+  void clearCart() {
+    _items = {};
+    notifyListeners();
+  }
+}
+
+class HomeScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Shopping Cart Sample'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Items in cart:',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 10),
+            Consumer<Cart>(
+              builder: (context, cart, child) {
+                return Text(
+                  '${cart.itemCount}',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -10,26 +94,29 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      routes: {
-        'home': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
-        'detail': (context) =>
-            DetailPage(title: 'Flutter Demo Home Page', price: 200, photo: ""),
-      },
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.grey,
+    return ChangeNotifierProvider(
+      create: (context) => Cart(),
+      child: MaterialApp(
+        routes: {
+          'home': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
+          'detail': (context) => DetailPage(
+              title: 'Flutter Demo Home Page', price: 200, photo: ""),
+        },
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.grey,
+        ),
+        home: const MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -76,19 +163,16 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Column(
-        children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Image.asset(
-              'assets/Image_Logo02.png',
-              width: 200,
-              height: 200,
-            ),
-          ])
-        ],
-      )),
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Center(
+          child: Image.asset(
+            'assets/Image_Logo02.png',
+            width: 200,
+          ),
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: Column(
         children: [
           Container(
@@ -284,20 +368,21 @@ class DetailPagestate extends State<DetailPage> {
     // than having to individually change instances of widgets.
     return Scaffold(
         appBar: AppBar(
-            // Here we take the value from the MyHomePage object that was created by
-            // the App.build method, and use it to set our appbar title.
-            title: Column(
-          children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Image.asset(
-                'assets/Image_Logo02.png',
-                width: 200,
-                height: 200,
-              ),
-            ])
-          ],
-        )),
+          // Here we take the value from the MyHomePage object that was created by
+          // the App.build method, and use it to set our appbar title.
+          title: Center(
+            child: Image.asset(
+              'assets/Image_Logo02.png',
+              width: 200,
+            ),
+          ),
+          backgroundColor: Colors.white,
+        ),
         body: SingleChildScrollView(
+            child: Center(
+                child: Container(
+          width: 700,
+          padding: const EdgeInsets.only(top: 32),
           child: Column(
             children: [
               Row(
@@ -564,7 +649,25 @@ class DetailPagestate extends State<DetailPage> {
               ),
               Row(
                 children: [
-                  Expanded(flex: 1, child: Text("細部說明")),
+                  Expanded(
+                      flex: 1,
+                      child: ShaderMask(
+                        blendMode: BlendMode.srcIn,
+                        shaderCallback: (Rect bounds) {
+                          return LinearGradient(
+                            colors: [Colors.red, Colors.blue],
+                            stops: [0.0, 1.0],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            tileMode: TileMode.mirror,
+                          ).createShader(bounds);
+                        },
+                        child: Text("細部說明"),
+                      )
+
+                      //  Text("細部說明")
+
+                      ),
                   Expanded(
                     flex: 10,
                     child: Divider(
@@ -603,6 +706,6 @@ class DetailPagestate extends State<DetailPage> {
               ),
             ],
           ),
-        ));
+        ))));
   }
 }
