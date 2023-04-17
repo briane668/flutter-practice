@@ -726,15 +726,19 @@ class DetailPagestate extends State<DetailPage> {
                 ),
                 Row(
                   children: [
-                    Expanded(child: ShaderMask(shaderCallback: (Rect bounds) {
-                      return LinearGradient(
-                              colors: [Colors.red, Colors.blue],
-                              stops: [0.0, 1.0],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              tileMode: TileMode.mirror)
-                          .createShader(bounds);
-                    })),
+                    Expanded(
+                        child: ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return LinearGradient(
+                                colors: [Colors.red, Colors.blue],
+                                stops: [0.0, 1.0],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                tileMode: TileMode.mirror)
+                            .createShader(bounds);
+                      },
+                      child: Text("細部說明"),
+                    )),
                     Expanded(
                       flex: 10,
                       child: Divider(
