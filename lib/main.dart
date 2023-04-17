@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       routes: {
         'home': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
         'detail': (context) =>
-            DetailPage(title: 'Flutter Demo Home Page', price: 200, photo: ""),
+            DetailPage(generateMockClothesItems(10, "女裝")[1]),
       },
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -73,6 +73,10 @@ class _MyHomePageState extends State<MyHomePage> {
     double screenWidth = MediaQuery.of(context).size.width;
     bool isMobile = screenWidth < 600;
 
+    final List<ClothesItem> womenClothes = generateMockClothesItems(10, "女裝");
+    final List<ClothesItem> menClothes = generateMockClothesItems(10, "男裝");
+    final List<ClothesItem> assesories = generateMockClothesItems(10, "配件");
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -94,15 +98,22 @@ class _MyHomePageState extends State<MyHomePage> {
           ])
         ],
       )),
-      body: isMobile ? HomeMobilePage() : HomeWebPage(),
+      body: isMobile
+          ? HomeMobilePage(womenClothes, menClothes, assesories)
+          : HomeWebPage(womenClothes, menClothes, assesories),
     );
   }
 }
 
 class HomeMobilePage extends StatelessWidget {
-  const HomeMobilePage({
-    super.key,
-  });
+  final List<ClothesItem> womenClothes;
+  final List<ClothesItem> menClothes;
+  final List<ClothesItem> assesories;
+  // const HomeMobilePage(List<ClothesItem> womenClothes, List<ClothesItem> menClothes, List<ClothesItem> assesories, {
+  //   super.key, required this.womenClothes, required this.menClothes, required this.assesories,
+  // });
+
+  HomeMobilePage(this.womenClothes, this.menClothes, this.assesories);
 
   @override
   Widget build(BuildContext context) {
@@ -140,10 +151,9 @@ class HomeMobilePage extends StatelessWidget {
                     child: Flexible(
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: null,
+                        itemCount: womenClothes.length,
                         itemBuilder: (context, index) {
-                          return cardListView(
-                              "Net 女裝", 200, 'assets/pngwingwomne.png');
+                          return cardListView(womenClothes[index]);
                         },
                       ),
                     )),
@@ -163,10 +173,9 @@ class HomeMobilePage extends StatelessWidget {
                     child: Flexible(
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: null,
+                        itemCount: menClothes.length,
                         itemBuilder: (context, index) {
-                          return cardListView(
-                              "Net 男裝", 100, 'assets/pngwing.png');
+                          return cardListView(menClothes[index]);
                         },
                       ),
                     )),
@@ -185,9 +194,9 @@ class HomeMobilePage extends StatelessWidget {
                   width: 300,
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
-                    itemCount: null,
+                    itemCount: assesories.length,
                     itemBuilder: (context, index) {
-                      return cardListView("Net 配件", 150, 'assets/pngwing.png');
+                      return cardListView(assesories[index]);
                     },
                   ),
                 ),
@@ -201,10 +210,14 @@ class HomeMobilePage extends StatelessWidget {
 }
 
 class HomeWebPage extends StatelessWidget {
-  const HomeWebPage({
-    super.key,
-  });
+  final List<ClothesItem> womenClothes;
+  final List<ClothesItem> menClothes;
+  final List<ClothesItem> assesories;
+  // const HomeMobilePage(List<ClothesItem> womenClothes, List<ClothesItem> menClothes, List<ClothesItem> assesories, {
+  //   super.key, required this.womenClothes, required this.menClothes, required this.assesories,
+  // });
 
+  HomeWebPage(this.womenClothes, this.menClothes, this.assesories);
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -244,10 +257,9 @@ class HomeWebPage extends StatelessWidget {
                         child: Flexible(
                           child: ListView.builder(
                             scrollDirection: Axis.vertical,
-                            itemCount: null,
+                            itemCount: womenClothes.length,
                             itemBuilder: (context, index) {
-                              return cardListView(
-                                  "Net 女裝", 200, 'assets/pngwingwomne.png');
+                              return cardListView(womenClothes[index]);
                             },
                           ),
                         )),
@@ -267,10 +279,9 @@ class HomeWebPage extends StatelessWidget {
                         child: Flexible(
                           child: ListView.builder(
                             scrollDirection: Axis.vertical,
-                            itemCount: null,
+                            itemCount: menClothes.length,
                             itemBuilder: (context, index) {
-                              return cardListView(
-                                  "Net 男裝", 100, 'assets/pngwing.png');
+                              return cardListView(menClothes[index]);
                             },
                           ),
                         )),
@@ -289,10 +300,9 @@ class HomeWebPage extends StatelessWidget {
                       width: 300,
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: null,
+                        itemCount: assesories.length,
                         itemBuilder: (context, index) {
-                          return cardListView(
-                              "Net 配件", 150, 'assets/pngwing.png');
+                          return cardListView(assesories[index]);
                         },
                       ),
                     ),
@@ -308,11 +318,9 @@ class HomeWebPage extends StatelessWidget {
 }
 
 class cardListView extends StatelessWidget {
-  String name;
-  int price;
-  String photo;
+  ClothesItem clothesItem;
 
-  cardListView(this.name, this.price, this.photo);
+  cardListView(this.clothesItem);
 
   @override
   Widget build(BuildContext context) {
@@ -329,10 +337,7 @@ class cardListView extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => DetailPage(
-                          title: 'Flutter Demo Home Page',
-                          price: 200,
-                          photo: photo)),
+                      builder: (context) => DetailPage(clothesItem)),
                 );
               },
               child: Row(
@@ -341,7 +346,7 @@ class cardListView extends StatelessWidget {
                     flex: 1,
                     child: Image.asset(
                       height: 50,
-                      photo,
+                      clothesItem.imageUrl,
                     ),
                   ),
                   Expanded(
@@ -349,8 +354,8 @@ class cardListView extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(name),
-                          Text('NT $price 元'),
+                          Text(clothesItem.name),
+                          Text(clothesItem.price),
                         ],
                       )),
                 ],
@@ -360,12 +365,9 @@ class cardListView extends StatelessWidget {
 }
 
 class DetailPage extends StatefulWidget {
-  const DetailPage({
-    super.key,
-    required this.title,
-    required this.price,
-    required this.photo,
-  });
+  var clothesItem;
+
+  DetailPage(this.clothesItem);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -376,20 +378,18 @@ class DetailPage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-  final String title;
-  final int price;
-  final String photo;
+  // final String title;
+  // final int price;
+  // final String photo;
 
   @override
-  State<DetailPage> createState() => DetailPagestate(title, price, photo);
+  State<DetailPage> createState() => DetailPagestate(clothesItem);
 }
 
 class DetailPagestate extends State<DetailPage> {
-  DetailPagestate(this.title, this.price, this.photo);
+  var clothesItem;
 
-  String title;
-  int price;
-  String photo;
+  DetailPagestate(this.clothesItem);
 
   @override
   Widget build(BuildContext context) {
@@ -399,6 +399,7 @@ class DetailPagestate extends State<DetailPage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
         appBar: AppBar(
             // Here we take the value from the MyHomePage object that was created by
@@ -425,7 +426,7 @@ class DetailPagestate extends State<DetailPage> {
                       child: Container(
                         margin: const EdgeInsets.symmetric(vertical: 10.0),
                         child: Image.asset(
-                          photo,
+                          clothesItem.imageUrl,
                         ),
                       )),
                   Container(
@@ -734,19 +735,19 @@ List<ClothesItem> generateMockClothesItems(int count, String category) {
     if (category == "男裝") {
       id = 100 + random.nextInt(99);
       name = getRandomClothingName();
-      imageUrl = "assets/images/img_clothes_men.png";
+      imageUrl = 'assets/pngwing.png';
     } else if (category == "女裝") {
       id = 200 + random.nextInt(99);
       name = getRandomClothingName();
-      imageUrl = "assets/images/img_clothes_women.png";
+      imageUrl = 'assets/pngwingwomne.png';
     } else if (category == "配件") {
       id = 300 + random.nextInt(99);
       name = getRandomAssesoriesName();
-      imageUrl = "assets/images/img_assesories.png";
+      imageUrl = 'assets/women.jpg';
     } else {
       id = 400 + random.nextInt(99);
       name = getRandomClothingName();
-      imageUrl = "assets/images/img_top_banner.jpg";
+      imageUrl = 'assets/women.jpg';
     }
 
     final price = "NT\$ ${random.nextInt(10000)}";
