@@ -87,16 +87,12 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          title: Column(
-        children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            Image.asset(
-              'assets/Image_Logo02.png',
-              width: 200,
-              height: 200,
-            ),
-          ])
-        ],
+          title: Center(
+        child: Image.asset(
+          'assets/Image_Logo02.png',
+          width: 200,
+          height: 200,
+        ),
       )),
       body: isMobile
           ? HomeMobilePage(womenClothes, menClothes, assesories)
@@ -404,324 +400,334 @@ class DetailPagestate extends State<DetailPage> {
         appBar: AppBar(
             // Here we take the value from the MyHomePage object that was created by
             // the App.build method, and use it to set our appbar title.
-            title: Column(
-          children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Image.asset(
-                'assets/Image_Logo02.png',
-                width: 200,
-                height: 200,
-              ),
-            ])
-          ],
+            title: Center(
+          child: Image.asset(
+            'assets/Image_Logo02.png',
+            width: 200,
+            height: 200,
+          ),
         )),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                      flex: 1,
+            child: Center(
+          child: Container(
+            width: 700,
+            padding: const EdgeInsets.only(top: 32),
+            child: Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Expanded(
+                        flex: 1,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Image.asset(
+                            clothesItem.imageUrl,
+                          ),
+                        )),
+                    Container(
+                      width: 10,
+                    ),
+                    Expanded(
+                      flex: 2,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 10.0),
-                        child: Image.asset(
-                          clothesItem.imageUrl,
-                        ),
-                      )),
-                  Container(
-                    width: 10,
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              child: Text(
-                                "NET 白上衣襯衫",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
+                          margin: const EdgeInsets.symmetric(vertical: 20.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                child: Text(
+                                  "NET 白上衣襯衫",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.symmetric(vertical: 5.0),
-                              child: Text("20230415"),
-                            ),
-                            Container(
-                              margin:
-                                  const EdgeInsets.symmetric(vertical: 15.0),
-                              child: Text(
-                                  style: TextStyle(
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.bold),
-                                  "NT100"),
-                            ),
-                            Divider(
-                              color: Colors.grey,
-                              thickness: 1,
-                              indent: 20,
-                            ),
-                            Container(
+                              Container(
                                 margin:
-                                    const EdgeInsets.symmetric(vertical: 20.0),
-                                child: Row(
-                                  children: [
-                                    Text("顏色"),
-                                    Container(
-                                      width: 10,
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                      width: 1,
-                                      child: Container(
-                                        color: Colors.grey[300],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 20,
-                                    ),
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Colors.green,
-                                      ),
-                                      padding: EdgeInsets.all(2),
-                                    ),
-                                    Container(
-                                      width: 20,
-                                    ),
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue,
-                                      ),
-                                      padding: EdgeInsets.all(2),
-                                    )
-                                  ],
-                                )),
-                            Container(
+                                    const EdgeInsets.symmetric(vertical: 5.0),
+                                child: Text("20230415"),
+                              ),
+                              Container(
                                 margin:
-                                    const EdgeInsets.symmetric(vertical: 20.0),
-                                child: Row(
-                                  children: [
-                                    Text("尺寸"),
-                                    Container(
-                                      width: 10,
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                      width: 1,
-                                      child: Container(
-                                        color: Colors.grey[300],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 10,
-                                    ),
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      color: Colors.grey,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'S',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      color: Colors.grey,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'M',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      color: Colors.grey,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          'L',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                            Container(
-                                margin:
-                                    const EdgeInsets.symmetric(vertical: 20.0),
-                                child: Row(
-                                  children: [
-                                    Text("數量"),
-                                    Container(
-                                      width: 10,
-                                    ),
-                                    SizedBox(
-                                      height: 20,
-                                      width: 1,
-                                      child: Container(
-                                        color: Colors.grey[300],
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 10,
-                                    ),
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      color: Colors.grey,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          '-',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      width: 30,
-                                    ),
-                                    Text("1"),
-                                    Container(
-                                      width: 30,
-                                    ),
-                                    Card(
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                      color: Colors.grey,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          '+',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )),
-                            Container(
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                color: Colors.grey,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Text(
-                                    '請選擇尺寸',
+                                    const EdgeInsets.symmetric(vertical: 15.0),
+                                child: Text(
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.bold),
+                                    "NT100"),
+                              ),
+                              Divider(
+                                color: Colors.grey,
+                                thickness: 1,
+                                indent: 20,
+                              ),
+                              Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 20.0),
+                                  child: Row(
+                                    children: [
+                                      Text("顏色"),
+                                      Container(
+                                        width: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                        width: 1,
+                                        child: Container(
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 20,
+                                      ),
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: Colors.green,
+                                        ),
+                                        padding: EdgeInsets.all(2),
+                                      ),
+                                      Container(
+                                        width: 20,
+                                      ),
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue,
+                                        ),
+                                        padding: EdgeInsets.all(2),
+                                      )
+                                    ],
+                                  )),
+                              Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 20.0),
+                                  child: Row(
+                                    children: [
+                                      Text("尺寸"),
+                                      Container(
+                                        width: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                        width: 1,
+                                        child: Container(
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 10,
+                                      ),
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        color: Colors.grey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'S',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        color: Colors.grey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'M',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        color: Colors.grey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            'L',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                              Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      vertical: 20.0),
+                                  child: Row(
+                                    children: [
+                                      Text("數量"),
+                                      Container(
+                                        width: 10,
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                        width: 1,
+                                        child: Container(
+                                          color: Colors.grey[300],
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 10,
+                                      ),
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        color: Colors.grey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            '-',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 30,
+                                      ),
+                                      Text("1"),
+                                      Container(
+                                        width: 30,
+                                      ),
+                                      Card(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10.0),
+                                        ),
+                                        color: Colors.grey,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            '+',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                              Container(
+                                child: Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  color: Colors.grey,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(
+                                      '請選擇尺寸',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Text('食品顏色依單品照為主'),
-                            Text('棉 100%'),
-                            Text("厚薄 : 薄片"),
-                            Text('彈性 : 無'),
-                            Text('素材產地 / 日本'),
-                            Text('加工產地 / 中國'),
-                          ],
-                        )),
-                  ),
-                ],
-              ),
-              Container(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(flex: 1, child: Text("細部說明")),
-                  Expanded(
-                    flex: 10,
-                    child: Divider(
-                      color: Colors.grey,
-                      thickness: 1,
-                      indent: 20,
+                              Text('食品顏色依單品照為主'),
+                              Text('棉 100%'),
+                              Text("厚薄 : 薄片"),
+                              Text('彈性 : 無'),
+                              Text('素材產地 / 日本'),
+                              Text('加工產地 / 中國'),
+                            ],
+                          )),
                     ),
-                  ),
-                ],
-              ),
-              Container(
-                height: 20,
-              ),
-              Text(
-                  "They met in California on Wednesday, a week after President Tsai was feted in New York with a leadership award Ms Tsai hailed their strong and unique partnership, and Mr McCarthy said that arms sales to Taiwan must continue."),
-              Container(
-                height: 20,
-              ),
-              Image.asset(
-                'assets/pngwing.png',
-                height: 600.0,
-              ),
-              Container(
-                height: 20,
-              ),
-              Image.asset(
-                'assets/pngwing.png',
-                height: 600.0,
-              ),
-              Container(
-                height: 20,
-              ),
-              Image.asset(
-                'assets/pngwing.png',
-                height: 600.0,
-              ),
-            ],
+                  ],
+                ),
+                Container(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Expanded(child: ShaderMask(shaderCallback: (Rect bounds) {
+                      return LinearGradient(
+                              colors: [Colors.red, Colors.blue],
+                              stops: [0.0, 1.0],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              tileMode: TileMode.mirror)
+                          .createShader(bounds);
+                    })),
+                    Expanded(
+                      flex: 10,
+                      child: Divider(
+                        color: Colors.grey,
+                        thickness: 1,
+                        indent: 20,
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 20,
+                ),
+                Text(
+                    "They met in California on Wednesday, a week after President Tsai was feted in New York with a leadership award Ms Tsai hailed their strong and unique partnership, and Mr McCarthy said that arms sales to Taiwan must continue."),
+                Container(
+                  height: 20,
+                ),
+                Image.asset(
+                  'assets/pngwing.png',
+                  height: 600.0,
+                ),
+                Container(
+                  height: 20,
+                ),
+                Image.asset(
+                  'assets/pngwing.png',
+                  height: 600.0,
+                ),
+                Container(
+                  height: 20,
+                ),
+                Image.asset(
+                  'assets/pngwing.png',
+                  height: 600.0,
+                ),
+              ],
+            ),
           ),
-        ));
+        )));
   }
 }
 
