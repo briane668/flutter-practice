@@ -1,6 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,6 +16,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // getAPI();
     return MaterialApp(
       routes: {
         'home': (context) => MyHomePage(title: 'Flutter Demo Home Page'),
@@ -384,11 +389,49 @@ class DetailPage extends StatefulWidget {
 
 class DetailPagestate extends State<DetailPage> {
   var clothesItem;
-
+  var main_image = "";
   DetailPagestate(this.clothesItem);
+
+  void getAPI() async {
+    final dio = Dio();
+    try {
+      final response = await dio
+          .get('https://api.appworks-school.tw/api/1.0/products/women');
+
+      final jsonData = json.decode(response.data);
+
+      setState(() {
+        // This call to setState tells the Flutter framework that something has
+        // changed in this State, which causes it to rerun the build method below
+        // so that the display can reflect the updated values. If we changed
+        // _counter without calling setState(), then the build method would not be
+        // called again, and so nothing would appear to happen.
+        main_image = jsonData['main_image'];
+        print("teats");
+        print(main_image);
+      });
+
+      print(response.data);
+    } catch (e) {
+      print('Request failed with error: $e');
+    }
+  }
+
+  void getApiHttp() async {
+    final response = await http.get(
+        Uri.parse('https://api.appworks-school.tw/api/1.0/products/women'));
+    if (response.statusCode == 200) {
+      // Successful API request, parse the response here
+      print(response.body);
+    } else {
+      // Error handling for failed API request
+      print('Request failed with status: ${response.statusCode}.');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    getAPI();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -421,8 +464,12 @@ class DetailPagestate extends State<DetailPage> {
                         flex: 1,
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Image.asset(
-                            clothesItem.imageUrl,
+                          child: CachedNetworkImage(
+                            imageUrl: main_image,
+                            placeholder: (context, url) =>
+                                CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
                           ),
                         )),
                     Container(
