@@ -390,30 +390,60 @@ class DetailPage extends StatefulWidget {
 class DetailPagestate extends State<DetailPage> {
   var clothesItem;
   var main_image = "";
+  TextEditingController _controller = TextEditingController();
+
+  int purchaseNumber = 0;
   DetailPagestate(this.clothesItem);
+
+  void _increase() {
+    setState(() {
+      purchaseNumber++;
+      _controller.text = purchaseNumber.toString();
+    });
+  }
+
+  void _decrease() {
+    setState(() {
+      if (purchaseNumber == 0) {
+        return;
+      }
+      purchaseNumber--;
+      _controller.text = purchaseNumber.toString();
+    });
+  }
 
   void getAPI() async {
     final dio = Dio();
     try {
-      final response = await dio
+      Response response = await dio
           .get('https://api.appworks-school.tw/api/1.0/products/women');
+      // final jsonData = json.decode(response.data);
+      print("first test");
 
-      final jsonData = json.decode(response.data);
+      Map<String, dynamic> jsonData = jsonDecode(response.data);
 
-      setState(() {
-        // This call to setState tells the Flutter framework that something has
-        // changed in this State, which causes it to rerun the build method below
-        // so that the display can reflect the updated values. If we changed
-        // _counter without calling setState(), then the build method would not be
-        // called again, and so nothing would appear to happen.
-        main_image = jsonData['main_image'];
-        print("teats");
-        print(main_image);
-      });
+      // final jsonData = jsonDecode(response.data);
 
-      print(response.data);
+      // final description =
+      //     jsonData['description']; // this will be of type String
+      // final main_image = jsonData['main_image']; // this will be of type int
+
+      // print(description.toString());
+
+      // Map<String, dynamic> data = jsonDecode(response.data);
+      // print(data['description']
+      //     .toString()); // prints "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"
+
+      print("test wade wade adaw daw d");
+
+      // print(data[
+      //     'main_image']); // prints "sunt aut facere repellat provident occaecati excepturi optio reprehenderit"
+
+      // final jsonData = json.decode(response.data);
+
+      print(main_image);
     } catch (e) {
-      print('Request failed with error: $e');
+      print(e);
     }
   }
 
@@ -422,7 +452,20 @@ class DetailPagestate extends State<DetailPage> {
         Uri.parse('https://api.appworks-school.tw/api/1.0/products/women'));
     if (response.statusCode == 200) {
       // Successful API request, parse the response here
+
+      final jsonData = json.decode(response.body);
       print(response.body);
+      setState(() {
+        // This call to setState tells the Flutter framework that something has
+        // changed in this State, which causes it to rerun the build method below
+        // so that the display can reflect the updated values. If we changed
+        // _counter without calling setState(), then the build method would not be
+        // called again, and so nothing would appear to happen.
+        print("teats");
+        main_image = jsonData['main_image'];
+
+        print(main_image);
+      });
     } else {
       // Error handling for failed API request
       print('Request failed with status: ${response.statusCode}.');
@@ -432,6 +475,7 @@ class DetailPagestate extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     getAPI();
+    // getApiHttp();
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -465,7 +509,7 @@ class DetailPagestate extends State<DetailPage> {
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 10.0),
                           child: CachedNetworkImage(
-                            imageUrl: main_image,
+                            imageUrl: clothesItem.imageUrl,
                             placeholder: (context, url) =>
                                 CircularProgressIndicator(),
                             errorWidget: (context, url, error) =>
@@ -532,24 +576,65 @@ class DetailPagestate extends State<DetailPage> {
                                       Container(
                                         width: 20,
                                       ),
-                                      Container(
-                                        width: 20,
+                                      // Container(
+                                      //   width: 20,
+                                      //   height: 20,
+                                      //   decoration: BoxDecoration(
+                                      //     color: Colors.green,
+                                      //   ),
+                                      //   padding: EdgeInsets.all(2),
+                                      // ),
+                                      // Container(
+                                      //   width: 20,
+                                      // ),
+                                      // Container(
+                                      //   width: 20,
+                                      //   height: 20,
+                                      //   decoration: BoxDecoration(
+                                      //     color: Colors.blue,
+                                      //   ),
+                                      //   padding: EdgeInsets.all(2),
+                                      // ),
+                                      SizedBox(
                                         height: 20,
-                                        decoration: BoxDecoration(
-                                          color: Colors.green,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          physics:
+                                              const ClampingScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              widget.clothesItem.colors.length,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                                onTap: () {
+                                                  log('Color Item $index clicked'
+                                                      as num);
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          4, 0, 8, 0),
+                                                  child: Container(
+                                                    width: 20,
+                                                    height: 20,
+                                                    decoration: BoxDecoration(
+                                                      color: widget.clothesItem
+                                                          .colors[index],
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey
+                                                              .withOpacity(0.5),
+                                                          spreadRadius: 1,
+                                                          blurRadius: 1,
+                                                          offset: const Offset(
+                                                              0, 1),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ));
+                                          },
                                         ),
-                                        padding: EdgeInsets.all(2),
-                                      ),
-                                      Container(
-                                        width: 20,
-                                      ),
-                                      Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          color: Colors.blue,
-                                        ),
-                                        padding: EdgeInsets.all(2),
                                       )
                                     ],
                                   )),
@@ -572,60 +657,115 @@ class DetailPagestate extends State<DetailPage> {
                                       Container(
                                         width: 10,
                                       ),
-                                      Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                        color: Colors.grey,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'S',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
+                                      SizedBox(
+                                        height: 20,
+                                        child: ListView.builder(
+                                          scrollDirection: Axis.horizontal,
+                                          physics:
+                                              const ClampingScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount:
+                                              widget.clothesItem.sizes.length,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                                onTap: () {
+                                                  log('Color Item $index clicked'
+                                                      as num);
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          4, 0, 8, 0),
+                                                  child: Container(
+                                                    width: 30,
+                                                    height: 22,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.blueGrey,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              50),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          color: Colors.grey
+                                                              .withOpacity(0.5),
+                                                          spreadRadius: 1,
+                                                          blurRadius: 1,
+                                                          offset: const Offset(
+                                                              0, 1),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: Text(
+                                                      widget.clothesItem
+                                                          .sizes[index],
+                                                      style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 16),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
+                                                  ),
+                                                ));
+                                          },
                                         ),
                                       ),
-                                      Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                        color: Colors.grey,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'M',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Card(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                        ),
-                                        color: Colors.grey,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            'L',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+
+                                      // Card(
+                                      //   shape: RoundedRectangleBorder(
+                                      //     borderRadius:
+                                      //         BorderRadius.circular(10.0),
+                                      //   ),
+                                      //   color: Colors.grey,
+                                      //   child: Padding(
+                                      //     padding: const EdgeInsets.all(8.0),
+                                      //     child: Text(
+                                      //       'S',
+                                      //       style: TextStyle(
+                                      //         color: Colors.white,
+                                      //         fontSize: 20,
+                                      //         fontWeight: FontWeight.bold,
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      // Card(
+                                      //   shape: RoundedRectangleBorder(
+                                      //     borderRadius:
+                                      //         BorderRadius.circular(10.0),
+                                      //   ),
+                                      //   color: Colors.grey,
+                                      //   child: Padding(
+                                      //     padding: const EdgeInsets.all(8.0),
+                                      //     child: Text(
+                                      //       'M',
+                                      //       style: TextStyle(
+                                      //         color: Colors.white,
+                                      //         fontSize: 20,
+                                      //         fontWeight: FontWeight.bold,
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      // Card(
+                                      //   shape: RoundedRectangleBorder(
+                                      //     borderRadius:
+                                      //         BorderRadius.circular(10.0),
+                                      //   ),
+                                      //   color: Colors.grey,
+                                      //   child: Padding(
+                                      //     padding: const EdgeInsets.all(8.0),
+                                      //     child: Text(
+                                      //       'L',
+                                      //       style: TextStyle(
+                                      //         color: Colors.white,
+                                      //         fontSize: 20,
+                                      //         fontWeight: FontWeight.bold,
+                                      //       ),
+                                      //     ),
+                                      //   ),
+                                      // ),
                                     ],
                                   )),
                               Container(
@@ -645,7 +785,7 @@ class DetailPagestate extends State<DetailPage> {
                                         ),
                                       ),
                                       Container(
-                                        width: 10,
+                                        width: 30,
                                       ),
                                       Card(
                                         shape: RoundedRectangleBorder(
@@ -655,22 +795,25 @@ class DetailPagestate extends State<DetailPage> {
                                         color: Colors.grey,
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            '-',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          child: IconButton(
+                                            icon: const Icon(Icons.remove),
+                                            onPressed: _decrease,
                                           ),
                                         ),
                                       ),
-                                      Container(
-                                        width: 30,
-                                      ),
-                                      Text("1"),
-                                      Container(
-                                        width: 30,
+                                      SizedBox(
+                                        width: 50,
+                                        child: TextField(
+                                          controller: _controller,
+                                          keyboardType: TextInputType.number,
+                                          textAlign: TextAlign.center,
+                                          onChanged: (String quantity) {
+                                            setState(() {
+                                              purchaseNumber =
+                                                  int.tryParse(quantity) ?? 0;
+                                            });
+                                          },
+                                        ),
                                       ),
                                       Card(
                                         shape: RoundedRectangleBorder(
@@ -680,34 +823,32 @@ class DetailPagestate extends State<DetailPage> {
                                         color: Colors.grey,
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
-                                          child: Text(
-                                            '+',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          child: IconButton(
+                                            icon: const Icon(Icons.add),
+                                            onPressed: _increase,
                                           ),
                                         ),
                                       ),
                                     ],
                                   )),
                               Container(
+                                width: double.infinity,
                                 child: Card(
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   color: Colors.grey,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Text(
-                                      '請選擇尺寸',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                  ),
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Center(
+                                        child: Text(
+                                          '請選擇尺寸',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      )),
                                 ),
                               ),
                               Text('食品顏色依單品照為主'),
@@ -727,18 +868,15 @@ class DetailPagestate extends State<DetailPage> {
                 Row(
                   children: [
                     Expanded(
-                        child: ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return LinearGradient(
-                                colors: [Colors.red, Colors.blue],
-                                stops: [0.0, 1.0],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                tileMode: TileMode.mirror)
-                            .createShader(bounds);
-                      },
-                      child: Text("細部說明"),
-                    )),
+                      child: ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: [Colors.blue, Colors.green],
+                        ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                        child: Text(
+                          "細部說明",
+                        ),
+                      ),
+                    ),
                     Expanded(
                       flex: 10,
                       child: Divider(
