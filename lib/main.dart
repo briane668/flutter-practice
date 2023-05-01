@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -61,7 +62,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-
+  // final platformChannel = MethodChannel('com.example.myApp/myChannel');
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -76,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+
     bool isMobile = screenWidth < 600;
 
     final List<ClothesItem> womenClothes = generateMockClothesItems(10, "女裝");
@@ -146,18 +148,17 @@ class HomeMobilePage extends StatelessWidget {
               Text('女裝'),
               Expanded(
                 child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20.0),
-                    height: 200.0,
-                    width: 300,
-                    child: Flexible(
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: womenClothes.length,
-                        itemBuilder: (context, index) {
-                          return cardListView(womenClothes[index]);
-                        },
-                      ),
-                    )),
+                  margin: const EdgeInsets.symmetric(vertical: 20.0),
+                  height: 200.0,
+                  width: 300,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: womenClothes.length,
+                    itemBuilder: (context, index) {
+                      return cardListView(womenClothes[index]);
+                    },
+                  ),
+                ),
               )
             ],
           ),
@@ -168,18 +169,17 @@ class HomeMobilePage extends StatelessWidget {
               Text('男裝'),
               Expanded(
                 child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20.0),
-                    height: 200.0,
-                    width: 300,
-                    child: Flexible(
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: menClothes.length,
-                        itemBuilder: (context, index) {
-                          return cardListView(menClothes[index]);
-                        },
-                      ),
-                    )),
+                  margin: const EdgeInsets.symmetric(vertical: 20.0),
+                  height: 200.0,
+                  width: 300,
+                  child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    itemCount: womenClothes.length,
+                    itemBuilder: (context, index) {
+                      return cardListView(womenClothes[index]);
+                    },
+                  ),
+                ),
               )
             ],
           ),
@@ -252,18 +252,17 @@ class HomeWebPage extends StatelessWidget {
                   Text('女裝'),
                   Expanded(
                     child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20.0),
-                        height: 200.0,
-                        width: 300,
-                        child: Flexible(
-                          child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            itemCount: womenClothes.length,
-                            itemBuilder: (context, index) {
-                              return cardListView(womenClothes[index]);
-                            },
-                          ),
-                        )),
+                      margin: const EdgeInsets.symmetric(vertical: 20.0),
+                      height: 200.0,
+                      width: 300,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: womenClothes.length,
+                        itemBuilder: (context, index) {
+                          return cardListView(womenClothes[index]);
+                        },
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -274,18 +273,17 @@ class HomeWebPage extends StatelessWidget {
                   Text('男裝'),
                   Expanded(
                     child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20.0),
-                        height: 200.0,
-                        width: 300,
-                        child: Flexible(
-                          child: ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            itemCount: menClothes.length,
-                            itemBuilder: (context, index) {
-                              return cardListView(menClothes[index]);
-                            },
-                          ),
-                        )),
+                      margin: const EdgeInsets.symmetric(vertical: 20.0),
+                      height: 200.0,
+                      width: 300,
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: womenClothes.length,
+                        itemBuilder: (context, index) {
+                          return cardListView(womenClothes[index]);
+                        },
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -390,15 +388,36 @@ class DetailPage extends StatefulWidget {
 class DetailPagestate extends State<DetailPage> {
   var clothesItem;
   var main_image = "";
+  final platformChannel = MethodChannel('com.example.myApp/myChannel');
   DetailPagestate(this.clothesItem);
+
+// Get battery level.
+  String _batteryLevel = 'Unknown battery level.';
+
+  Future<void> _getBatteryLevel() async {
+    String batteryLevel;
+    try {
+      final int result = await platformChannel.invokeMethod('getBatteryLevel');
+      batteryLevel = 'Battery level at $result % .';
+    } on PlatformException catch (e) {
+      batteryLevel = "Failed to get battery level: '${e.message}'.";
+    }
+
+    setState(() {
+      _batteryLevel = batteryLevel;
+    });
+  }
 
   void getAPI() async {
     final dio = Dio();
     try {
+      final result = await platformChannel.invokeMethod('myMethod');
       final response = await dio
           .get('https://api.appworks-school.tw/api/1.0/products/women');
 
-      final jsonData = json.decode(response.data);
+      final dynamic productJson = response.data['data'];
+
+      final id = productJson['id'] as int;
 
       setState(() {
         // This call to setState tells the Flutter framework that something has
@@ -406,7 +425,7 @@ class DetailPagestate extends State<DetailPage> {
         // so that the display can reflect the updated values. If we changed
         // _counter without calling setState(), then the build method would not be
         // called again, and so nothing would appear to happen.
-        main_image = jsonData['main_image'];
+        main_image = productJson['main_image'] as String;
         print("teats");
         print(main_image);
       });
