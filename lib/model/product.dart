@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:stylish/product_detail/model/variant.dart';
+import 'package:namer_app/model/variant.dart';
 
 part 'product.g.dart';
 
@@ -92,7 +92,6 @@ extension ProductSizeExtension on ProductSize {
 }
 
 extension ProductExtension on Product {
-
   int getStock(
     int? selectedColorIndex,
     int? selectedSizeIndex,

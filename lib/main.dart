@@ -6,6 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:namer_app/model/category.dart';
+import 'package:namer_app/model/product.dart';
+
+import 'homebloc/gallery_bloc.dart';
+import 'homebloc/gallery_event.dart';
+import 'homebloc/gallery_state.dart';
+
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
   runApp(const MyApp());
@@ -61,6 +70,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  static const platform = MethodChannel('com.stylish.app/tappay');
+
   int _counter = 0;
   // final platformChannel = MethodChannel('com.example.myApp/myChannel');
   void _incrementCounter() {
@@ -72,6 +83,14 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+  }
+
+  void getTappay() async {
+    try {
+      final String result = await platform.invokeMethod('getTappayPrime', {});
+    } catch (e) {
+      print('Request failed with error: $e');
+    }
   }
 
   @override
@@ -91,20 +110,27 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          title: Center(
-        child: Image.asset(
-          'assets/Image_Logo02.png',
-          width: 200,
-          height: 200,
-        ),
-      )),
-      body: isMobile
-          ? HomeMobilePage(womenClothes, menClothes, assesories)
-          : HomeWebPage(womenClothes, menClothes, assesories),
-    );
+        appBar: AppBar(
+            // Here we take the value from the MyHomePage object that was created by
+            // the App.build method, and use it to set our appbar title.
+            title: Center(
+          child: Image.asset(
+            'assets/Image_Logo02.png',
+            width: 200,
+            height: 200,
+          ),
+        )),
+        body: BlocProvider(
+          create: (_) => GalleryBloc()..add(const CategoriesFetched()),
+          child:
+              BlocBuilder<GalleryBloc, GalleryState>(builder: (context, state) {
+            return isMobile
+                ? HomeMobilePage(
+                    womenClothes, menClothes, assesories, state.categories)
+                : HomeWebPage(
+                    womenClothes, menClothes, assesories, state.categories);
+          }),
+        ));
   }
 }
 
@@ -112,16 +138,25 @@ class HomeMobilePage extends StatelessWidget {
   final List<ClothesItem> womenClothes;
   final List<ClothesItem> menClothes;
   final List<ClothesItem> assesories;
+  final List<Category> categories;
+
   // const HomeMobilePage(List<ClothesItem> womenClothes, List<ClothesItem> menClothes, List<ClothesItem> assesories, {
   //   super.key, required this.womenClothes, required this.menClothes, required this.assesories,
   // });
 
-  HomeMobilePage(this.womenClothes, this.menClothes, this.assesories);
+  HomeMobilePage(
+      this.womenClothes, this.menClothes, this.assesories, this.categories);
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: LatLng(37.422, -122.084),
+            zoom: 15,
+          ),
+        ),
         Container(
           margin: const EdgeInsets.symmetric(vertical: 20.0),
           height: 200.0,
@@ -148,17 +183,15 @@ class HomeMobilePage extends StatelessWidget {
               Text('女裝'),
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 20.0),
-                  height: 200.0,
-                  width: 300,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: womenClothes.length,
-                    itemBuilder: (context, index) {
-                      return cardListView(womenClothes[index]);
-                    },
-                  ),
-                ),
+                    margin: const EdgeInsets.symmetric(vertical: 20.0),
+                    height: 200.0,
+                    width: 300,
+                    child: ListView(
+                      children: [
+                        for (var product in categories[0].products)
+                          cardListView(product)
+                      ],
+                    )),
               )
             ],
           ),
@@ -169,17 +202,15 @@ class HomeMobilePage extends StatelessWidget {
               Text('男裝'),
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 20.0),
-                  height: 200.0,
-                  width: 300,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: womenClothes.length,
-                    itemBuilder: (context, index) {
-                      return cardListView(womenClothes[index]);
-                    },
-                  ),
-                ),
+                    margin: const EdgeInsets.symmetric(vertical: 20.0),
+                    height: 200.0,
+                    width: 300,
+                    child: ListView(
+                      children: [
+                        for (var product in categories[0].products)
+                          cardListView(product)
+                      ],
+                    )),
               )
             ],
           ),
@@ -190,17 +221,15 @@ class HomeMobilePage extends StatelessWidget {
               Text('配件'),
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 20.0),
-                  height: 600.0,
-                  width: 300,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: assesories.length,
-                    itemBuilder: (context, index) {
-                      return cardListView(assesories[index]);
-                    },
-                  ),
-                ),
+                    margin: const EdgeInsets.symmetric(vertical: 20.0),
+                    height: 600.0,
+                    width: 300,
+                    child: ListView(
+                      children: [
+                        for (var product in categories[0].products)
+                          cardListView(product)
+                      ],
+                    )),
               )
             ],
           ),
@@ -214,15 +243,23 @@ class HomeWebPage extends StatelessWidget {
   final List<ClothesItem> womenClothes;
   final List<ClothesItem> menClothes;
   final List<ClothesItem> assesories;
+  final List<Category> categories;
   // const HomeMobilePage(List<ClothesItem> womenClothes, List<ClothesItem> menClothes, List<ClothesItem> assesories, {
   //   super.key, required this.womenClothes, required this.menClothes, required this.assesories,
   // });
 
-  HomeWebPage(this.womenClothes, this.menClothes, this.assesories);
+  HomeWebPage(
+      this.womenClothes, this.menClothes, this.assesories, this.categories);
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        GoogleMap(
+          initialCameraPosition: CameraPosition(
+            target: LatLng(37.422, -122.084),
+            zoom: 15,
+          ),
+        ),
         Container(
           margin: const EdgeInsets.symmetric(vertical: 20.0),
           height: 200.0,
@@ -252,17 +289,15 @@ class HomeWebPage extends StatelessWidget {
                   Text('女裝'),
                   Expanded(
                     child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 20.0),
-                      height: 200.0,
-                      width: 300,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: womenClothes.length,
-                        itemBuilder: (context, index) {
-                          return cardListView(womenClothes[index]);
-                        },
-                      ),
-                    ),
+                        margin: const EdgeInsets.symmetric(vertical: 20.0),
+                        height: 200.0,
+                        width: 300,
+                        child: ListView(
+                          children: [
+                            for (var product in categories[0].products)
+                              cardListView(product)
+                          ],
+                        )),
                   )
                 ],
               ),
@@ -273,17 +308,15 @@ class HomeWebPage extends StatelessWidget {
                   Text('男裝'),
                   Expanded(
                     child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 20.0),
-                      height: 200.0,
-                      width: 300,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: womenClothes.length,
-                        itemBuilder: (context, index) {
-                          return cardListView(womenClothes[index]);
-                        },
-                      ),
-                    ),
+                        margin: const EdgeInsets.symmetric(vertical: 20.0),
+                        height: 200.0,
+                        width: 300,
+                        child: ListView(
+                          children: [
+                            for (var product in categories[0].products)
+                              cardListView(product)
+                          ],
+                        )),
                   )
                 ],
               ),
@@ -294,17 +327,15 @@ class HomeWebPage extends StatelessWidget {
                   Text('配件'),
                   Expanded(
                     child: Container(
-                      margin: const EdgeInsets.symmetric(vertical: 20.0),
-                      height: 600.0,
-                      width: 300,
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: assesories.length,
-                        itemBuilder: (context, index) {
-                          return cardListView(assesories[index]);
-                        },
-                      ),
-                    ),
+                        margin: const EdgeInsets.symmetric(vertical: 20.0),
+                        height: 600.0,
+                        width: 300,
+                        child: ListView(
+                          children: [
+                            for (var product in categories[0].products)
+                              cardListView(product)
+                          ],
+                        )),
                   )
                 ],
               ),
@@ -317,9 +348,9 @@ class HomeWebPage extends StatelessWidget {
 }
 
 class cardListView extends StatelessWidget {
-  ClothesItem clothesItem;
+  final Product product;
 
-  cardListView(this.clothesItem);
+  cardListView(this.product);
 
   @override
   Widget build(BuildContext context) {
@@ -335,26 +366,31 @@ class cardListView extends StatelessWidget {
                 print("success");
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                      builder: (context) => DetailPage(clothesItem)),
+                  MaterialPageRoute(builder: (context) => DetailPage(product)),
                 );
               },
               child: Row(
                 children: <Widget>[
                   Expanded(
                     flex: 1,
-                    child: Image.asset(
-                      height: 50,
-                      clothesItem.imageUrl,
-                    ),
+                    child: CachedNetworkImage(
+                        imageUrl: product.imageUrl,
+                        fit: BoxFit.cover,
+                        height: 120,
+                        width: 100,
+                        errorWidget: (context, url, error) => Image.asset(
+                              'assets/stylish_placeholder.png',
+                              height: 120,
+                              width: 100,
+                            )),
                   ),
                   Expanded(
                       flex: 3,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(clothesItem.name),
-                          Text(clothesItem.price),
+                          Text(product.title),
+                          Text(product.price.toString()),
                         ],
                       )),
                 ],
