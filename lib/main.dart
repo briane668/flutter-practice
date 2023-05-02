@@ -139,6 +139,12 @@ class HomeMobilePage extends StatelessWidget {
   final List<ClothesItem> menClothes;
   final List<ClothesItem> assesories;
   final List<Category> categories;
+  final LatLng _center = const LatLng(45.521563, -122.677433);
+
+  late GoogleMapController mapController;
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
 
   // const HomeMobilePage(List<ClothesItem> womenClothes, List<ClothesItem> menClothes, List<ClothesItem> assesories, {
   //   super.key, required this.womenClothes, required this.menClothes, required this.assesories,
@@ -149,92 +155,12 @@ class HomeMobilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: LatLng(37.422, -122.084),
-            zoom: 15,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 20.0),
-          height: 200.0,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: null,
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    'assets/women.jpg',
-                    width: 200,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              Text('女裝'),
-              Expanded(
-                child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20.0),
-                    height: 200.0,
-                    width: 300,
-                    child: ListView(
-                      children: [
-                        for (var product in categories[0].products)
-                          cardListView(product)
-                      ],
-                    )),
-              )
-            ],
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              Text('男裝'),
-              Expanded(
-                child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20.0),
-                    height: 200.0,
-                    width: 300,
-                    child: ListView(
-                      children: [
-                        for (var product in categories[0].products)
-                          cardListView(product)
-                      ],
-                    )),
-              )
-            ],
-          ),
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              Text('配件'),
-              Expanded(
-                child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 20.0),
-                    height: 600.0,
-                    width: 300,
-                    child: ListView(
-                      children: [
-                        for (var product in categories[0].products)
-                          cardListView(product)
-                      ],
-                    )),
-              )
-            ],
-          ),
-        ),
-      ],
+    return GoogleMap(
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: _center,
+        zoom: 11.0,
+      ),
     );
   }
 }
@@ -244,6 +170,14 @@ class HomeWebPage extends StatelessWidget {
   final List<ClothesItem> menClothes;
   final List<ClothesItem> assesories;
   final List<Category> categories;
+
+  late GoogleMapController mapController;
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  final LatLng _center = const LatLng(45.521563, -122.677433);
+
   // const HomeMobilePage(List<ClothesItem> womenClothes, List<ClothesItem> menClothes, List<ClothesItem> assesories, {
   //   super.key, required this.womenClothes, required this.menClothes, required this.assesories,
   // });
@@ -252,98 +186,14 @@ class HomeWebPage extends StatelessWidget {
       this.womenClothes, this.menClothes, this.assesories, this.categories);
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: LatLng(37.422, -122.084),
-            zoom: 15,
-          ),
-        ),
-        Container(
-          margin: const EdgeInsets.symmetric(vertical: 20.0),
-          height: 200.0,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: null,
-            itemBuilder: (context, index) {
-              return Card(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    'assets/women.jpg',
-                    width: 200,
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        Expanded(
-            child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                children: [
-                  Text('女裝'),
-                  Expanded(
-                    child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20.0),
-                        height: 200.0,
-                        width: 300,
-                        child: ListView(
-                          children: [
-                            for (var product in categories[0].products)
-                              cardListView(product)
-                          ],
-                        )),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  Text('男裝'),
-                  Expanded(
-                    child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20.0),
-                        height: 200.0,
-                        width: 300,
-                        child: ListView(
-                          children: [
-                            for (var product in categories[0].products)
-                              cardListView(product)
-                          ],
-                        )),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                children: [
-                  Text('配件'),
-                  Expanded(
-                    child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 20.0),
-                        height: 600.0,
-                        width: 300,
-                        child: ListView(
-                          children: [
-                            for (var product in categories[0].products)
-                              cardListView(product)
-                          ],
-                        )),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ))
-      ],
+    return GoogleMap(
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: _center,
+        zoom: 11.0,
+      ),
     );
+    ;
   }
 }
 
